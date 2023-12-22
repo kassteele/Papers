@@ -1,0 +1,6 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+deGier_iGAS_attribution/Stan/*.rds
+deGier_iGAS_attribution/output/*.rds
