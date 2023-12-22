@@ -4,3 +4,4 @@
 .Ruserdata
 deGier_iGAS_attribution/Stan/*.rds
 deGier_iGAS_attribution/output/*.rds
+KorthalsAltes_COVID19_absenteeism/data/*.rds
