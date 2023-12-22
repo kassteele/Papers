@@ -1,8 +1,8 @@
 # Papers
 
-Here you can find data and scripts of papers I have (co-)authored that anyone may use to reproduce our research.
+Here you can find data and scripts of papers I have (co-)authored. Anyone may use it to reproduce our research. If you use it for you own research, please refer to our corresponding paper.
 
-The different papers are organised in folder. To view the code in a folder, just navigate to it and browse through the files.
+The different papers are organised in folders. To view the code in a folder, just navigate to it and browse through the files.
 
 To download a specific folder:
 
