@@ -8,7 +8,7 @@ data_absent <- data_absent_org |>
     Sector = Bedrijfstak,
     Week = Week,
     rate_absent = rate_verzuim,
-    n_pers = n_pers) |>
+    n_pers = n_personeel) |>
   # Filter out "empty" Sector
   filter(
     Sector != "") |>
