@@ -1,6 +1,11 @@
 #
-# Exporteer figuren
+# Export figures
 #
+
+ggsave(
+  plot = plot_data_infectionradar,
+  filename = "output/data_infectionradar.pdf",
+  width = 15, height = 10, units = "in")
 
 ggsave(
   plot = plot_absent_overview,
