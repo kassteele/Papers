@@ -27,7 +27,7 @@ if (os == "Linux") {
 
 # Average number of week in a year
 # Needed for seasonal effect
-p_seizoen <- 365.25/7
+p_seas <- 365.25/7
 
 # Functions to extract things from model fit
 #
