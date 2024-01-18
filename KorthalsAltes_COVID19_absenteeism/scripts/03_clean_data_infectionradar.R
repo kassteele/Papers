@@ -1,8 +1,8 @@
 #
-# Clean data_infectieradar
+# Clean data_infectionradar
 #
 
-data_infectieradar <- data_infectieradar_org |>
+data_infectionradar <- data_infectionradar_org |>
   mutate(
     # Week corresponding to the given date
     Week = Date_of_statistics |>
@@ -19,7 +19,8 @@ data_infectieradar <- data_infectieradar_org |>
     Week) |>
   summarise(
     n_days = n(),
-    perc_symptoms = perc_symptoms |> mean()) |>
+    perc_symptoms = perc_symptoms |> mean(),
+    interpolated = anyNA(Perc_covid_symptoms)) |>
   # Only keep complete weeks with 7 days
   filter(
     n_days == 7) |>
