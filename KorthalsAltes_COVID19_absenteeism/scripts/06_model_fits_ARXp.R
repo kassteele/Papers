@@ -28,10 +28,10 @@ model_formulas_AIC <- data_absent_fit |>
           object = formula(model_formulas[i, ]$formula_trend),
           data = data_absent_fit)
 
-        # Model matrix harmonic terms
+        # Model matrix seasonal terms
         # Without intercept
-        X_harm <- model.matrix(
-          object = formula(model_formulas[i, ]$formula_harm),
+        X_seas <- model.matrix(
+          object = formula(model_formulas[i, ]$formula_seas),
           data = data_absent_fit)
 
         # Model matrix covariate
@@ -42,7 +42,7 @@ model_formulas_AIC <- data_absent_fit |>
 
         # Combine model matrices
         # These are feeded to xreg in the arima() function
-        X <- cbind(X_trend, X_harm, X_cov)
+        X <- cbind(X_trend, X_seas, X_cov)
 
         # Given the regression part, loop over the four AR(p) models
         for (p in 1:4) {

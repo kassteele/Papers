@@ -12,18 +12,18 @@ data_absent_comp <- map2(
 
     # Coefficients
     beta_trend <- fit |> pluck("model_fit") |> extract_coef("\\(Intercept\\)|holiday|ns\\(t")
-    beta_harm  <- fit |> pluck("model_fit") |> extract_coef("sin|cos")
+    beta_seas  <- fit |> pluck("model_fit") |> extract_coef("sin|cos")
     beta_cov   <- fit |> pluck("model_fit") |> extract_coef("perc_symptoms")
     beta_ar    <- fit |> pluck("model_fit") |> extract_coef("ar")
 
     # Regression components
-    # Harmonic term is not always present -> set to 0
+    # seasonal term is not always present -> set to 0
     # Use drop() to create a vector instead of a single column matrix
     trend <- drop((fit |> pluck("X_trend")) %*% beta_trend)
-    if (length(beta_harm) > 0) {
-      harm <- drop((fit |> pluck("X_harm")) %*% beta_harm)
+    if (length(beta_seas) > 0) {
+      seas <- drop((fit |> pluck("X_seas")) %*% beta_seas)
     } else {
-      harm = rep(0, nrow(data))
+      seas = rep(0, nrow(data))
     }
     cov <- drop((fit |> pluck("X_cov")) %*% beta_cov)
 
@@ -32,14 +32,14 @@ data_absent_comp <- map2(
 
     # AR component
     # The residuals are lagged for the modelmatrix of the AR component
-    res  <- obs - trend - harm - cov
+    res  <- obs - (trend + seas + cov)
     X_ar <- beta_ar |> seq_along() |> sapply(FUN = lag, x = res)
     ar   <- drop(X_ar %*% beta_ar)
 
     # Determine the lowest value of each component
     # This is used for the addition
     min_trend <- min(trend)
-    min_harm  <- min(harm)
+    min_seas  <- min(seas)
     min_cov   <- min(cov)
     min_ar    <- min(ar, na.rm = TRUE) # Always includes NAs, minimum 1, maximum 4
 
@@ -47,8 +47,8 @@ data_absent_comp <- map2(
     # These four terms added up result in the eventual fit
     data <- data |>
       mutate(
-        comp_trend = trend + min_harm + min_cov + min_ar,
-        comp_harm  = harm - min_harm,
+        comp_trend = trend + min_seas + min_cov + min_ar,
+        comp_seas  = seas - min_seas,
         comp_cov   = cov - min_cov,
         comp_ar    = ar - min_ar)
 

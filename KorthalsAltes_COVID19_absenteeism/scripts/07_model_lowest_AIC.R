@@ -31,9 +31,9 @@ model_fits <- map2(
       object = formula(model_formula$formula_trend),
       data = data_absent_fit)
 
-    # Model matrix harmonic terms
-    X_harm <- model.matrix(
-      object = formula(model_formula$formula_harm),
+    # Model matrix seasonal terms
+    X_seas <- model.matrix(
+      object = formula(model_formula$formula_seas),
       data = data_absent_fit)
 
     # Model matrix covariate
@@ -42,7 +42,7 @@ model_fits <- map2(
       data = data_absent_fit)
 
     # Combine model matrices
-    X <- cbind(X_trend, X_harm, X_cov)
+    X <- cbind(X_trend, X_seas, X_cov)
 
     # Fit best model
     model_fit <- arima(
@@ -58,7 +58,7 @@ model_fits <- map2(
       list(
         model_fit = model_fit,
         X_trend = X_trend,
-        X_harm = X_harm,
+        X_seas = X_seas,
         X_cov = X_cov))
 
   })

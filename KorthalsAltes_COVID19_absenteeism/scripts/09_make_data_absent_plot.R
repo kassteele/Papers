@@ -24,12 +24,12 @@ data_absent_plot <- data_absent_plot |>
   mutate(
     ymin_trend = 0,
     ymax_trend = pmax(0, comp_trend),
-    ymin_harm = ymax_trend,
-    ymax_harm = pmax(0, comp_trend + comp_harm),
-    ymin_cov = ymax_harm,
-    ymax_cov = pmax(0, comp_trend + comp_harm + comp_cov),
+    ymin_seas = ymax_trend,
+    ymax_seas = pmax(0, comp_trend + comp_seas),
+    ymin_cov = ymax_seas,
+    ymax_cov = pmax(0, comp_trend + comp_seas + comp_cov),
     ymin_ar = ymax_cov,
-    ymax_ar = pmax(0, comp_trend + comp_harm + comp_cov + comp_ar)) |>
+    ymax_ar = pmax(0, comp_trend + comp_seas + comp_cov + comp_ar)) |>
   # The comp_ columns are not needed anymore
   select(
     -starts_with("comp")) |>
@@ -46,14 +46,10 @@ data_absent_plot <- data_absent_plot |>
         levels = c(
           "ar",
           "cov",
-          "harm",
+          "seas",
           "trend"),
         labels = c(
           "Autoregressive effect",
           "Percentage IR participants with\nCOVID-19 like symptoms",
           "Seasonal effect",
           "Long-term trend")))
-
-# Period: start date (Monday of 1st week) and end date (Sunday of last week)
-date_start <- data_absent_plot |> pull(Week) |> min() |> format("%b %-e, %Y")
-date_end <- data_absent_plot |> pull(Week) |> max() |> (`+`)(days(6)) |> format("%b %-e, %Y")
