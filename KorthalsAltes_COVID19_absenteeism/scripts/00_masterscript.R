@@ -1,10 +1,9 @@
-# Verzuim per Sector en de relatie with the wekelijkse
-# percentage COVID-19 achtige klachten uit Infectieradar
+# Absenteeism per sector and the relation with the weekly
+# percentage COVID-19-like symptoms from Infectieradar
 #
-# Auteur: Jan van de Kassteele (ODD-SIM)
-# i.s.m. Hester Korthals Altes en Jacco Wallinga (EPI-MOD)
+# Authors: Jan van de Kassteele (ODD-SIM)
+#          Hester Korthals Altes and Jacco Wallinga (EPI-MOD)
 # RIVM
-#
 
 source(file = "scripts/01_initialise.R")
 source(file = "scripts/02_import_data_infectionradar.R")
@@ -20,5 +19,4 @@ source(file = "scripts/08_model_post_processing.R")
 source(file = "scripts/09_make_data_absent_plot.R")
 source(file = "scripts/10_plot_data_infectionradar.R")
 source(file = "scripts/10_plot_absent_fit_overview.R")
-source(file = "scripts/10_plot_absent_fit_specific.R")
 source(file = "scripts/11_export_figures.R")
