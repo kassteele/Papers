@@ -55,27 +55,53 @@ data_absent <- data_absent |>
         negate = TRUE)) |>
   droplevels() |>
   # Rename remaining Dutch sector naming to English
+  # The abbreviated version
   mutate(
     Sector = Sector |>
       factor(
         labels = c(
-          "A - Agriculture, forestry and fishery",
-          "B - Mineral extraction",
+          "A - Primary sector",
+          "B - Mining",
           "C - Industry",
-          "D - Production and distribution of and trade in electricity, natural gas, steam and cooled air",
-          "E - Water collection and distribution, waste and sewage treatment",
+          "D - Energy",
+          "E - (Waste) water mgmt",
           "F - Construction",
-          "G - Wholesale and retail; car repair",
-          "H - Transport and storage",
-          "I - Lodging, meal and drink supply",
-          "J - Information and communication",
-          "K - Financial institutions",
-          "L - Rental and trade in real estate",
-          "M - Advice, research and other specialistic",
-          "N - Lease of movable property and other services",
-          "O - Public administration, services, and services mandatory social insurances",
+          "G - Retail and repair",
+          "H - Logistics",
+          "I - Hospitality",
+          "J - ICT",
+          "K - Finance",
+          "L - Real estate",
+          "M - Consultancy",
+          "N - Rental services",
+          "O - Public services",
           "P - Education",
-          "Q - Health care and welfare",
-          "R - Culture, sports and recreation",
+          "Q - Healthcare",
+          "R - Leisure",
           "S - Other services",
           "Total")))
+# # The original long version
+# mutate(
+#   Sector = Sector |>
+#     factor(
+#       labels = c(
+#         "A - Agriculture, forestry and fishery",
+#         "B - Mineral extraction",
+#         "C - Industry",
+#         "D - Production and distribution of and trade in electricity, natural gas, steam and cooled air",
+#         "E - Water collection and distribution, waste and sewage treatment",
+#         "F - Construction",
+#         "G - Wholesale and retail; car repair",
+#         "H - Transport and storage",
+#         "I - Lodging, meal and drink supply",
+#         "J - Information and communication",
+#         "K - Financial institutions",
+#         "L - Rental and trade in real estate",
+#         "M - Advice, research and other specialistic",
+#         "N - Lease of movable property and other services",
+#         "O - Public administration, services, and services mandatory social insurances",
+#         "P - Education",
+#         "Q - Health care and welfare",
+#         "R - Culture, sports and recreation",
+#         "S - Other services",
+#         "Total")))

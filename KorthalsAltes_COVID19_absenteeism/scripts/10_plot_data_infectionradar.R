@@ -22,9 +22,8 @@ plot_data_infectionradar <- ggplot(
   scale_shape_manual(
     values = c(16, 1)) +
   labs(
-    title = str_glue("Weekly average percentage of participants reporting COVID-19-like symptoms in Infection radar: {date_start} to {date_end}"),
     x = "Date of first day of the week",
-    y = "Percentage COVID-19-like symptoms") +
+    y = "Percentage of participants in Infection radar\nreporting COVID-19-like symptoms") +
   guides(
     shape = "none") +
   theme_minimal() +

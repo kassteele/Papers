@@ -3,7 +3,7 @@
 #
 
 # Add n_pers to sector levels -> Sector (n_pers)
-# Dit is the gemiddelde aantal werknemers over de periode van de fit
+# This is the mean number of respondents per sector over the study period
 data_absent_plot <-
   left_join(
     x = data_absent_comp,
@@ -14,8 +14,22 @@ data_absent_plot <-
         n_pers_gem = n_pers |> mean() |> (`/`)(100) |> round() |> (`*`)(100)),
     by = "Sector") |>
   mutate(
-    Sector_n = str_glue("{str_wrap(Sector, width = 40)}\n({n_pers_gem})") |>
+    Sector_n = str_glue("{Sector}\n({n_pers_gem})") |>
       fct_inorder())
+
+# Add a symbol to the names of specific sectors with low (<5% coverage) and high (>20%) coverage
+data_absent_plot <- data_absent_plot |>
+  mutate(
+    Sector_n = Sector_n |>
+      fct_recode(
+        # Low coverage
+        "A - Primary sector\n(8700)*" = "A - Primary sector\n(8700)",
+        "B - Mining\n(500)*" = "B - Mining\n(500)",
+        "D - Energy\n(1000)*" = "D - Energy\n(1000)",
+        "O - Public services\n(30000)*" = "O - Public services\n(30000)",
+        # High coverage
+        "E - (Waste) water mgmt\n(9300)^" = "E - (Waste) water mgmt\n(9300)",
+        "K - Finance\n(72900)^" = "K - Finance\n(72900)"))
 
 data_absent_plot <- data_absent_plot |>
   # Determine ymin and ymax for usage in geom_ribbon()

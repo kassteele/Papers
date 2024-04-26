@@ -25,24 +25,22 @@ plot_absent_overview <- ggplot(
     minor_breaks = seq(from = 0, to = 2.5, by = 0.25)) +
   facet_wrap(
     facets = vars(Sector_n),
-    nrow = 4, ncol = 5) +
+    nrow = 5, ncol = 4) +
   labs(
-    title = str_glue("Weekly absenteeism notification frequency (yearly basis) per sector of activity: {date_start} to {date_end}"),
-    subtitle = "
-    Points: reported absenteeism, between brackets the average number of employees over the study period
-    Coloured areas: portion of absenteeism explained by the four components given in the legend",
     x = "Date of first day of the week",
-    y = "Weekly absenteeism notification frequency\n(yearly-based, average per employee)",
+    y = "Weekly absenteeism notification frequency (yearly-based, average per employee)",
     fill = NULL) +
   guides(
     fill = guide_legend(
+      nrow = 1,
       keyheight = 2)) +
   theme_minimal() +
   theme(
     panel.grid.major = element_line(linewidth = 0.2),
     panel.grid.minor = element_line(linewidth = 0.1),
     axis.text.x = element_text(size = 10, angle = 90, hjust = 1, vjust = 0.5),
-    axis.text.y = element_text(size = 10))
+    axis.text.y = element_text(size = 10),
+    legend.position = "bottom")
 
 # Plot
 print(plot_absent_overview)
