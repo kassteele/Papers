@@ -232,7 +232,7 @@
 <text transform='translate(466.93,336.69) rotate(-90)' text-anchor='end' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='35.96px' lengthAdjust='spacingAndGlyphs'>Oct '22</text>
 <text transform='translate(521.95,336.69) rotate(-90)' text-anchor='end' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='34.08px' lengthAdjust='spacingAndGlyphs'>Jan '23</text>
 <text transform='translate(575.77,336.69) rotate(-90)' text-anchor='end' style='font-size: 10.00px;fill: #4D4D4D; font-family: "Arial";' textLength='35.96px' lengthAdjust='spacingAndGlyphs'>Apr '23</text>
-<text x='324.25' y='383.41' text-anchor='middle' style='font-size: 11.00px; font-family: "Arial";' textLength='157.19px' lengthAdjust='spacingAndGlyphs'>Date of first day of the week</text>
+<text x='324.25' y='383.41' text-anchor='middle' style='font-size: 11.00px; font-family: "Arial";' textLength='26.29px' lengthAdjust='spacingAndGlyphs'>Date</text>
 <text transform='translate(13.50,168.62) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: "Arial";' textLength='242.96px' lengthAdjust='spacingAndGlyphs'>Percentage of participants in Infection radar</text>
 <text transform='translate(25.38,168.62) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: "Arial";' textLength='191.23px' lengthAdjust='spacingAndGlyphs'>reporting COVID-19-like symptoms</text>
 </g>

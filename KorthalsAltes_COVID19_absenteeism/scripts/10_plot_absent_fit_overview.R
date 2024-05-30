@@ -7,7 +7,7 @@ plot_absent_overview <- ggplot(
   mapping = aes(x = Week, ymin = ymin, ymax = ymax, fill = Component)) +
   geom_ribbon() +
   geom_point(
-    data = data_absent_plot |> distinct(Sector_n, Week, rate_absent),
+    data = data_absent_plot |> distinct(Sector, Week, rate_absent),
     mapping = aes(x = Week, y = rate_absent),
     shape = "+",
     size = 2,
@@ -24,11 +24,11 @@ plot_absent_overview <- ggplot(
     breaks = seq(from = 0, to = 2.5, by = 0.5),
     minor_breaks = seq(from = 0, to = 2.5, by = 0.25)) +
   facet_wrap(
-    facets = vars(Sector_n),
+    facets = vars(Sector),
     nrow = 5, ncol = 4) +
   labs(
-    x = "Date of first day of the week",
-    y = "Weekly absenteeism notification frequency (yearly-based, average per employee)",
+    x = "Date",
+    y = "Absenteeism (reports per person per year)",
     fill = NULL) +
   guides(
     fill = guide_legend(

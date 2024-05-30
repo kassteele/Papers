@@ -22,7 +22,7 @@ plot_data_infectionradar <- ggplot(
   scale_shape_manual(
     values = c(16, 1)) +
   labs(
-    x = "Date of first day of the week",
+    x = "Date",
     y = "Percentage of participants in Infection radar\nreporting COVID-19-like symptoms") +
   guides(
     shape = "none") +
