@@ -1,5 +1,4 @@
-# Masterscript "Attribution of invasive group A Streptococcal infections to
-# varicella and respiratory virus circulation, the Netherlands, 2010-2023"
+# iGAS time series decomposition - attribution to several pathogens
 #
 # Jan van de Kassteele
 # Brechje de Gier
@@ -26,7 +25,7 @@ source(file = "scripts/08c_post_process_child_wps.R")
 source(file = "scripts/09a_plot_adult_bla.R")
 source(file = "scripts/09b_plot_child_bla.R")
 source(file = "scripts/09c_plot_child_wps.R")
-source(file = "scripts/09d_plot_observed_time_series.R")
+source(file = "scripts/09d_plot_observed.R")
 
 # Tabulations
 source(file = "scripts/10_tabulate_attributions.R")
