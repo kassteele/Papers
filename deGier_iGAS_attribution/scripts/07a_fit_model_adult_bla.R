@@ -13,7 +13,7 @@ fit <- stan(
     "w_Strep", "w_infA", "w_infB", "w_RSV", "w_hMPV", "w_SARSCoV2",
     "mu_Trend", "mu_Strep", "mu_infA", "mu_infB", "mu_RSV", "mu_hMPV", "mu_SARSCoV2", "mu_iGAS"))
 
-# Extract mu's and put them in a tibble with matrix columns
+# Extract mu MCMC samples and put them in a tibble with matrix columns
 fit_adult_bla <- fit |>
   extract(
     pars = c("mu_Trend", "mu_Strep", "mu_infA", "mu_infB", "mu_RSV", "mu_hMPV", "mu_SARSCoV2", "mu_iGAS")) |>
