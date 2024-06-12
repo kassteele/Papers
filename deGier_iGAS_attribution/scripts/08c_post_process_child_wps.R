@@ -16,23 +16,26 @@ fit_child_wps <- fit_child_wps |>
   mutate(
     # Add information from igas_data
     igas_data |> select(Week, Coverage_isis),
-    # Add Year for aggregation
-    Year = Week |> year() |> pmin(2022)) |>
+    # Add Period for aggregation
+    Year = Week |> year(),
+    Period = case_when(
+      Year %in% 2010:2019 ~ "2010-2019",
+      Year %in% 2020:2021 ~ "2020-2021",
+      TRUE ~ "2022-2023*")) |>
   # Simplify the tibble by "unchopping" the list columns with MCMC samples into rows
   unchop(
     cols = starts_with("attr_abs")) |>
-  # Add MCMC sample number
-  # This is needed for the cumulative sum of attr_abs_<pathogen> later on
-  # Because the unchopping expands the list columns (the cell contains the samples),
-  # we can just add 1:n_samples here, repeated for the total number of weeks in the data (data_list$n)
   mutate(
-    Sample = seq_len(n_post*n_chains) |> rep(times = data_list$n)) |>
-  # Calculate weekly relative attributions attr_rel_<pathogen> (unit: percentages)
-  # These are attr_abs_<pathogen> divided by attr_abs_iGAS x 100%, except for attr_abs_iGAS of course
-  # Note that attr_abs_iGAS should first be divided by Coverage_isis
-  # because attr_abs_iGAS is the expected number of the OBSERVED counts
-  # and attr_abs_<pathogen> were estimated on "corrected-for-coverage" scale
-  mutate(
+    # Add MCMC sample number
+    # This is needed for the cumulative sum of attr_abs_<pathogen> later on
+    # Because the unchopping expands the list columns (the cell contains the samples),
+    # we can just add 1:n_samples here, repeated for the total number of weeks in the data (data_list$n)
+    Sample = seq_len(n_post*n_chains) |> rep(times = data_list$n),
+    # Calculate weekly relative attributions attr_rel_<pathogen> (unit: percentages)
+    # These are attr_abs_<pathogen> divided by attr_abs_iGAS x 100%, except for attr_abs_iGAS of course
+    # Note that attr_abs_iGAS should first be divided by Coverage_isis
+    # because attr_abs_iGAS is the expected number of the OBSERVED counts
+    # and attr_abs_<pathogen> were estimated on "corrected-for-coverage" scale
     across(
       .cols = starts_with("attr_abs") & !contains("iGAS"),
       .fns = \(x) 100*x/(attr_abs_iGAS/Coverage_isis),
@@ -49,7 +52,7 @@ attr_abs_week_child_wps <- fit_child_wps |>
   summarise(
     across(
       .cols = starts_with("attr_abs") & !contains("iGAS"),
-      .fns = mean,
+      .fns = ~ mean(.x, na.rm = TRUE),
       .names = "{.col |> str_remove('attr_abs_')}")) |>
   pivot_longer(
     cols = -Week,
@@ -58,30 +61,30 @@ attr_abs_week_child_wps <- fit_child_wps |>
   mutate(
     Pathogen = Pathogen |> fct_inorder() |> fct_rev())
 
-# Calculate summaries of yearly sums of attr_abs_<pathogen> for tabulation
-attr_abs_year_child_wps <- fit_child_wps |>
+# Calculate summaries of Period sums of attr_abs_<pathogen> for tabulation
+attr_abs_period_child_wps <- fit_child_wps |>
   # Sum over weeks by Year and Sample
   group_by(
-    Year, Sample) |>
+    Period, Sample) |>
   reframe(
     across(
       .cols = starts_with("attr_abs"),
       .fns = sum)) |>
-  # Calculate summary statistics by Year
+  # Calculate summary statistics by Period
   group_by(
-    Year) |>
+    Period) |>
   summarise(
     across(
       .cols = starts_with("attr_abs"),
-      .fns = mean,
+      .fns = ~ mean(.x, na.rm = TRUE),
       .names = "total_{.col}"),
     across(
       .cols = starts_with("attr"),
-      .fns = \(x) x |> quantile(probs = 0.025),
+      .fns = \(x) x |> quantile(probs = 0.025, na.rm = TRUE),
       .names = "lwr_{.col}"),
     across(
       .cols = starts_with("attr"),
-      .fns = \(x) x |> quantile(probs = 0.975),
+      .fns = \(x) x |> quantile(probs = 0.975, na.rm = TRUE),
       .names = "upr_{.col}")) |>
   ungroup()
 
@@ -98,15 +101,15 @@ attr_abs_overall_child_wps <- fit_child_wps |>
   summarise(
     across(
       .cols = starts_with("attr_abs"),
-      .fns = mean,
+      .fns = ~ mean(.x, na.rm = TRUE),
       .names = "total_{.col}"),
     across(
       .cols = starts_with("attr_abs"),
-      .fns = \(x) x |> quantile(probs = 0.025),
+      .fns = \(x) x |> quantile(probs = 0.025, na.rm = TRUE),
       .names = "lwr_{.col}"),
     across(
       .cols = starts_with("attr_abs"),
-      .fns = \(x) x |> quantile(probs = 0.975),
+      .fns = \(x) x |> quantile(probs = 0.975, na.rm = TRUE),
       .names = "upr_{.col}"))
 
 #
@@ -120,7 +123,7 @@ attr_rel_week_child_wps <- fit_child_wps |>
   summarise(
     across(
       .cols = starts_with("attr_rel") & !contains("iGAS"),
-      .fns = mean,
+      .fns = ~ mean(.x, na.rm = TRUE),
       .names = "{.col |> str_remove('attr_rel_')}")) |>
   pivot_longer(
     cols = -Week,
@@ -129,30 +132,30 @@ attr_rel_week_child_wps <- fit_child_wps |>
   mutate(
     Pathogen = Pathogen |> fct_inorder() |> fct_rev())
 
-# Calculate summaries of yearly means of attr_rel_<pathogen> for tabulation
-attr_rel_year_child_wps <- fit_child_wps |>
-  # Mean over weeks by Year and Sample
+# Calculate summaries of Period means of attr_rel_<pathogen> for tabulation
+attr_rel_period_child_wps <- fit_child_wps |>
+  # Mean over weeks by Period and Sample
   group_by(
-    Year, Sample) |>
+    Period, Sample) |>
   reframe(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = mean)) |>
+      .fns = ~ mean(.x, na.rm = TRUE))) |>
   # Calculate summary statistics by Year
   group_by(
-    Year) |>
+    Period) |>
   summarise(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = mean,
+      .fns = ~ mean(.x, na.rm = TRUE),
       .names = "mean_{.col}"),
     across(
       .cols = starts_with("attr"),
-      .fns = \(x) x |> quantile(probs = 0.025),
+      .fns = \(x) x |> quantile(probs = 0.025, na.rm = TRUE),
       .names = "lwr_{.col}"),
     across(
       .cols = starts_with("attr"),
-      .fns = \(x) x |> quantile(probs = 0.975),
+      .fns = \(x) x |> quantile(probs = 0.975, na.rm = TRUE),
       .names = "upr_{.col}")) |>
   ungroup()
 
@@ -164,18 +167,18 @@ attr_rel_overall_child_wps <- fit_child_wps |>
   reframe(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = mean)) |>
+      .fns = ~ mean(.x, na.rm = TRUE))) |>
   # Calculate summary statistics
   summarise(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = mean,
+      .fns = ~ mean(.x, na.rm = TRUE),
       .names = "mean_{.col}"),
     across(
       .cols = starts_with("attr_rel"),
-      .fns = \(x) x |> quantile(probs = 0.025),
+      .fns = \(x) x |> quantile(probs = 0.025, na.rm = TRUE),
       .names = "lwr_{.col}"),
     across(
       .cols = starts_with("attr_rel"),
-      .fns = \(x) x |> quantile(probs = 0.975),
+      .fns = \(x) x |> quantile(probs = 0.975, na.rm = TRUE),
       .names = "upr_{.col}"))
