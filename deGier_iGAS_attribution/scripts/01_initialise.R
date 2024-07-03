@@ -6,7 +6,6 @@
 library(tidyverse)
 library(rstan)
 library(writexl)
-library(patchwork)
 
 # Source functions
 list.files(path = "functions", full.names = TRUE) |>

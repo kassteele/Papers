@@ -71,11 +71,3 @@ plot_attr_rel_week_child_wps <- ggplot() +
     panel.grid.major = element_line(linewidth = 0.2),
     panel.grid.minor = element_line(linewidth = 0.1),
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
-
-# Combined
-plot_attr_week_adult_bla <- plot_attr_abs_week_child_wps + plot_attr_rel_week_child_wps +
-  plot_layout(
-    ncol = 2,
-    guides = "collect") +
-  plot_annotation(
-    tag_levels = "a")
