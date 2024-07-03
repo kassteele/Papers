@@ -13,20 +13,30 @@ fit <- stan(
     "w_Strep", "w_VZV",
     "mu_Trend", "mu_Strep", "mu_VZV", "mu_iGAS"))
 
-# Extract mu MCMC samples and put them in a tibble with list columns
-fit_child_wps <- fit |>
+# Extract mu MCMC samples
+mu_child_wps <- fit |>
   extract(
     pars = c("mu_Trend", "mu_Strep", "mu_VZV", "mu_iGAS")) |>
+  # Transpose to have weeks in the rows, samples in the columns
   map(
     .f = t) |>
   as_tibble() |>
+  # It is easier to work with list columns instead of matrix columns
+  # Therefore split the matrix by row (week) into a list with n_post*n_chains samples for each week
   mutate(
     across(
       .cols = everything(),
       .fns = \(x) x |> asplit(MARGIN = 1)))
 
+# Extract w MCMC samples and put them in a tibble with matrix columns
+w_child_wps <- fit |>
+  extract(
+    pars = c("w_Strep", "w_VZV")) |>
+  as_tibble() |>
+
 # Export fit for futher use
-fit_child_wps |> saveRDS(file = "output/fit_child_wps.rds")
+mu_child_wps |> saveRDS(file = "output/mu_child_wps.rds")
+w_child_wps |> saveRDS(file = "output/w_child_wps.rds")
 
 # # Diagnose mixing
 # fit |> stan_trace(pars = c("beta_Trend", "sigma_b_Trend", "phi"), ncol = 1, size = 0.1)

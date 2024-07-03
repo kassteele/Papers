@@ -3,11 +3,11 @@
 #
 
 # Import fit from rds
-fit_child_wps <- readRDS(file = "output/fit_child_wps.rds")
+mu_child_wps <- readRDS(file = "output/mu_child_wps.rds")
 
 # Post-process fit
-fit_child_wps <- fit_child_wps |>
-  # fit_child_wps containts the absolute attributions, called mu_<pathogen>
+mu_child_wps <- mu_child_wps |>
+  # mu_child_wps containts the absolute attributions, called mu_<pathogen>
   # Rename mu_<pathogen> to attr_abs_<pathogen>
   # This to distinguish between relative attributions, attr_rel_<pathogen>
   rename_with(
@@ -46,13 +46,13 @@ fit_child_wps <- fit_child_wps |>
 #
 
 # Calculate weekly summaries of attr_abs_<pathogen> for plotting
-attr_abs_week_child_wps <- fit_child_wps |>
+attr_abs_week_child_wps <- mu_child_wps |>
   group_by(
     Week) |>
   summarise(
     across(
       .cols = starts_with("attr_abs") & !contains("iGAS"),
-      .fns = ~ mean(.x, na.rm = TRUE),
+      .fns = \(x) x |> mean(na.rm = TRUE),
       .names = "{.col |> str_remove('attr_abs_')}")) |>
   pivot_longer(
     cols = -Week,
@@ -62,7 +62,7 @@ attr_abs_week_child_wps <- fit_child_wps |>
     Pathogen = Pathogen |> fct_inorder() |> fct_rev())
 
 # Calculate summaries of Period sums of attr_abs_<pathogen> for tabulation
-attr_abs_period_child_wps <- fit_child_wps |>
+attr_abs_period_child_wps <- mu_child_wps |>
   # Sum over weeks by Year and Sample
   group_by(
     Period, Sample) |>
@@ -76,7 +76,7 @@ attr_abs_period_child_wps <- fit_child_wps |>
   summarise(
     across(
       .cols = starts_with("attr_abs"),
-      .fns = ~ mean(.x, na.rm = TRUE),
+      .fns = \(x) x |> mean(na.rm = TRUE),
       .names = "total_{.col}"),
     across(
       .cols = starts_with("attr"),
@@ -89,7 +89,7 @@ attr_abs_period_child_wps <- fit_child_wps |>
   ungroup()
 
 # Calculate summaries of overall sums of attr_abs_<pathogen> for tabulation
-attr_abs_overall_child_wps <- fit_child_wps |>
+attr_abs_overall_child_wps <- mu_child_wps |>
   # Sum over all weeks by Sample
   group_by(
     Sample) |>
@@ -101,7 +101,7 @@ attr_abs_overall_child_wps <- fit_child_wps |>
   summarise(
     across(
       .cols = starts_with("attr_abs"),
-      .fns = ~ mean(.x, na.rm = TRUE),
+      .fns = \(x) x |> mean(na.rm = TRUE),
       .names = "total_{.col}"),
     across(
       .cols = starts_with("attr_abs"),
@@ -117,13 +117,13 @@ attr_abs_overall_child_wps <- fit_child_wps |>
 #
 
 # Calculate weekly summaries of attr_rel_<pathogen> for plotting
-attr_rel_week_child_wps <- fit_child_wps |>
+attr_rel_week_child_wps <- mu_child_wps |>
   group_by(
     Week) |>
   summarise(
     across(
       .cols = starts_with("attr_rel") & !contains("iGAS"),
-      .fns = ~ mean(.x, na.rm = TRUE),
+      .fns = \(x) x |> mean(na.rm = TRUE),
       .names = "{.col |> str_remove('attr_rel_')}")) |>
   pivot_longer(
     cols = -Week,
@@ -133,21 +133,21 @@ attr_rel_week_child_wps <- fit_child_wps |>
     Pathogen = Pathogen |> fct_inorder() |> fct_rev())
 
 # Calculate summaries of Period means of attr_rel_<pathogen> for tabulation
-attr_rel_period_child_wps <- fit_child_wps |>
+attr_rel_period_child_wps <- mu_child_wps |>
   # Mean over weeks by Period and Sample
   group_by(
     Period, Sample) |>
   reframe(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = ~ mean(.x, na.rm = TRUE))) |>
+      .fns = \(x) x |> mean(na.rm = TRUE))) |>
   # Calculate summary statistics by Year
   group_by(
     Period) |>
   summarise(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = ~ mean(.x, na.rm = TRUE),
+      .fns = \(x) x |> mean(na.rm = TRUE),
       .names = "mean_{.col}"),
     across(
       .cols = starts_with("attr"),
@@ -160,19 +160,19 @@ attr_rel_period_child_wps <- fit_child_wps |>
   ungroup()
 
 # Calculate summaries of overall means of attr_rel_<pathogen> for tabulation
-attr_rel_overall_child_wps <- fit_child_wps |>
+attr_rel_overall_child_wps <- mu_child_wps |>
   # Sum over all weeks by Sample
   group_by(
     Sample) |>
   reframe(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = ~ mean(.x, na.rm = TRUE))) |>
+      .fns = \(x) x |> mean(na.rm = TRUE))) |>
   # Calculate summary statistics
   summarise(
     across(
       .cols = starts_with("attr_rel"),
-      .fns = ~ mean(.x, na.rm = TRUE),
+      .fns = \(x) x |> mean(na.rm = TRUE),
       .names = "mean_{.col}"),
     across(
       .cols = starts_with("attr_rel"),

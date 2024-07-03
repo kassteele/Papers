@@ -20,6 +20,7 @@ source(file = "scripts/07c_fit_model_child_wps.R")
 source(file = "scripts/08a_post_process_adult_bla.R")
 source(file = "scripts/08b_post_process_child_bla.R")
 source(file = "scripts/08c_post_process_child_wps.R")
+source(file = "scripts/08d_post_process_lag_weights.R")
 
 # Visualisations
 source(file = "scripts/09a_plot_adult_bla.R")
