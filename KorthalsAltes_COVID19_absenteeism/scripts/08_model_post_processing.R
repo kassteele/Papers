@@ -47,6 +47,11 @@ data_absent_comp <- map2(
     # These four terms added up result in the eventual fit
     data <- data |>
       mutate(
+        trend = trend,
+        seas = seas,
+        cov = cov,
+        ar = ar,
+        res = rate_absent - trend - seas - cov - ar,
         comp_trend = trend + min_seas + min_cov + min_ar,
         comp_seas  = seas - min_seas,
         comp_cov   = cov - min_cov,
@@ -57,3 +62,20 @@ data_absent_comp <- map2(
   }) |>
   # Make a tibble from the list of tibbles
   bind_rows()
+
+# Print Table 1
+# Proportion variance explained by componenets
+data_absent_comp |>
+  group_by(
+    Sector) |>
+  summarise(
+    var_trend = var(trend, na.rm = TRUE),
+    var_seas = var(seas, na.rm = TRUE),
+    var_infr = var(cov, na.rm = TRUE),
+    var_ar = var(ar, na.rm = TRUE),
+    var_res = var(res, na.rm = TRUE)) |>
+  mutate(
+    var_tot = var_trend + var_seas + var_infr + var_ar + var_res,
+    across(
+      .cols = starts_with("var_"),
+      .fns = \(x) round(100*x/var_tot, digits = 1)))
